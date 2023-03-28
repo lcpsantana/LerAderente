@@ -3,9 +3,7 @@ package Aplication;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import Entities.Clientes;
 import Entities.Header;
@@ -17,13 +15,11 @@ public class ProcessaArquivo {
 	Header header = new Header();
 	Clientes cliente = null;
 	String[] retorno;
-	Scanner sc = new Scanner(System.in);
 
 	public void lerArquivo() {
 
 		try {
 
-			System.out.println("Entre com o local do arquivo: ");
 			String str = "C:\\Users\\LUIZ\\Desktop\\Curso Java\\Exercicios Sirius\\Aderente\\CAPRE_20180522_0954_S";
 
 			File file = new File(str);
@@ -41,9 +37,7 @@ public class ProcessaArquivo {
 
 			br.close();
 
-			sc.close();
-
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.out.println("Erro na leitura do arquivo : " + e.getMessage());
 
 		}
@@ -52,32 +46,52 @@ public class ProcessaArquivo {
 
 	public void setDadosHeader() {
 
-		if (retorno[0].equals("H")) {
+		if (retorno[0].toUpperCase().equals("H")) {
 
-			header = new Header();
+			try {
+				if (retorno.length < 5) {
+					
+					throw new Exception("Erro no Header - Quantidade de campos invalida: Contem " + retorno.length + " Campos");
 
-			header.setTipoRegistro(retorno[0]);
-			header.setTipoOperacao(retorno[1]);
-			header.setDia(retorno[2]);
-			header.setDia(retorno[3]);
-			header.setAno(retorno[4]);
+				} else {
 
-			listaheader.add(header);
+					header = new Header();
+
+					header.setTipoRegistro(retorno[0]);
+					header.setTipoOperacao(retorno[1]);
+					header.setDia(retorno[2]);
+					header.setMes(retorno[3]);
+					header.setAno(retorno[4]);
+
+					listaheader.add(header);
+
+				}
+
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 
 		}
 	}
 
 	public void setDadosClientes() {
 
-		if (retorno[0].equals("D")) {
+		if (retorno[0].toUpperCase().equals("D")) {
 
-			cliente = new Clientes();
+			try {
 
-			cliente.setTipoRegistro(retorno[0]);
-			cliente.setNomeDistribuidor(retorno[1]);
-			cliente.setNumeroSorte(retorno[2]);
+				if (retorno.length >= 3) {
+					cliente = new Clientes();
 
-			listacliente.add(cliente);
+					cliente.setTipoRegistro(retorno[0]);
+					cliente.setNomeDistribuidor(retorno[1]);
+					cliente.setNumeroSorte(retorno[2]);
+
+					listacliente.add(cliente);
+				}
+			} catch (Exception e) {
+				System.out.println("Erro Cliente: " + e.getMessage());
+			}
 
 		}
 
